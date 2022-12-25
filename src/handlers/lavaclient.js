@@ -45,10 +45,10 @@ module.exports = (client) => {
     const fields = [];
 
     const embed = new EmbedBuilder()
-      .setAuthor({ name: "Now Playing" })
+      .setAuthor({ name: "Şu an çalıyor" })
       .setColor(client.config.EMBED_COLORS.BOT_EMBED)
       .setDescription(`[${song.title}](${song.uri})`)
-      .setFooter({ text: `Requested By: ${song.requester}` });
+      .setFooter({ text: `İsteyen: ${song.requester}` });
 
     if (song.sourceName === "youtube") {
       const identifier = song.identifier;
@@ -57,14 +57,14 @@ module.exports = (client) => {
     }
 
     fields.push({
-      name: "Song Duration",
+      name: "Şarkı uzunluğu",
       value: "`" + prettyMs(song.length, { colonNotation: true }) + "`",
       inline: true,
     });
 
     if (queue.tracks.length > 0) {
       fields.push({
-        name: "Position in Queue",
+        name: "Sıradaki yeri",
         value: (queue.tracks.length + 1).toString(),
         inline: true,
       });
@@ -76,7 +76,7 @@ module.exports = (client) => {
 
   lavaclient.on("nodeQueueFinish", async (_node, queue) => {
     const channel = client.channels.cache.get(queue.player.channelId);
-    channel.safeSend("Queue has ended.");
+    channel.safeSend("Şarkı bitti.");
     queue.player.disconnect();
     await client.musicManager.destroyPlayer(queue.player.guildId);
   });
