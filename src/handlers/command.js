@@ -35,20 +35,20 @@ module.exports = {
 
     // Owner commands
     if (cmd.category === "OWNER" && !OWNER_IDS.includes(message.author.id)) {
-      return message.safeReply("This command is only accessible to bot owners");
+      return message.safeReply("Bu komutu sadece bot sahibi kullanabilir");
     }
 
     // check user permissions
     if (cmd.userPermissions && cmd.userPermissions?.length > 0) {
       if (!message.channel.permissionsFor(message.member).has(cmd.userPermissions)) {
-        return message.safeReply(`You need ${parsePermissions(cmd.userPermissions)} for this command`);
+        return message.safeReply(`${parsePermissions(cmd.userPermissions)} adlı yetkiye ihtiyacın var.`);
       }
     }
 
     // check bot permissions
     if (cmd.botPermissions && cmd.botPermissions.length > 0) {
       if (!message.channel.permissionsFor(message.guild.members.me).has(cmd.botPermissions)) {
-        return message.safeReply(`I need ${parsePermissions(cmd.botPermissions)} for this command`);
+        return message.safeReply(`${parsePermissions(cmd.botPermissions)} adlı yetkiye ihtiyacım var.`);
       }
     }
 
@@ -62,7 +62,7 @@ module.exports = {
     if (cmd.cooldown > 0) {
       const remaining = getRemainingCooldown(message.author.id, cmd);
       if (remaining > 0) {
-        return message.safeReply(`You are on cooldown. You can again use the command in \`${timeformat(remaining)}\``);
+        return message.safeReply(`Çok hızlısın. Biraz bekle! \`${timeformat(remaining)}\``);
       }
     }
 
@@ -70,7 +70,7 @@ module.exports = {
       await cmd.messageRun(message, args, data);
     } catch (ex) {
       message.client.logger.error("messageRun", ex);
-      message.safeReply("An error occurred while running this command");
+      message.safeReply("Bu komutu uygularken bir hata meydana geldi daha sonra tekrar dene.");
     } finally {
       if (cmd.cooldown > 0) applyCooldown(message.author.id, cmd);
     }
@@ -81,7 +81,7 @@ module.exports = {
    */
   handleSlashCommand: async function (interaction) {
     const cmd = interaction.client.slashCommands.get(interaction.commandName);
-    if (!cmd) return interaction.reply({ content: "An error has occurred", ephemeral: true }).catch(() => {});
+    if (!cmd) return interaction.reply({ content: "Hata!", ephemeral: true }).catch(() => {});
 
     // callback validations
     if (cmd.validations) {
@@ -98,7 +98,7 @@ module.exports = {
     // Owner commands
     if (cmd.category === "OWNER" && !OWNER_IDS.includes(interaction.user.id)) {
       return interaction.reply({
-        content: `This command is only accessible to bot owners`,
+        content: `Bot özel`,
         ephemeral: true,
       });
     }
@@ -107,7 +107,7 @@ module.exports = {
     if (interaction.member && cmd.userPermissions?.length > 0) {
       if (!interaction.member.permissions.has(cmd.userPermissions)) {
         return interaction.reply({
-          content: `You need ${parsePermissions(cmd.userPermissions)} for this command`,
+          content: `Bu komutu kullanman için ${parsePermissions(cmd.userPermissions)} yetkisine sahip olmalısın.`,
           ephemeral: true,
         });
       }
@@ -117,7 +117,7 @@ module.exports = {
     if (cmd.botPermissions && cmd.botPermissions.length > 0) {
       if (!interaction.guild.members.me.permissions.has(cmd.botPermissions)) {
         return interaction.reply({
-          content: `I need ${parsePermissions(cmd.botPermissions)} for this command`,
+          content: `${parsePermissions(cmd.botPermissions)} yetkisine ihtiyacım var.`,
           ephemeral: true,
         });
       }
@@ -128,7 +128,7 @@ module.exports = {
       const remaining = getRemainingCooldown(interaction.user.id, cmd);
       if (remaining > 0) {
         return interaction.reply({
-          content: `You are on cooldown. You can again use the command in \`${timeformat(remaining)}\``,
+          content: `Çok hızlısın. Biraz bekle! \`${timeformat(remaining)}\``,
           ephemeral: true,
         });
       }
@@ -139,7 +139,7 @@ module.exports = {
       const settings = await getSettings(interaction.guild);
       await cmd.interactionRun(interaction, { settings });
     } catch (ex) {
-      await interaction.followUp("Oops! An error occurred while running the command");
+      await interaction.followUp("Bu komutu uygularken bir hata meydana geldi daha sonra tekrar dene.");
       interaction.client.logger.error("interactionRun", ex);
     } finally {
       if (cmd.cooldown > 0) applyCooldown(interaction.user.id, cmd);
