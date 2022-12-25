@@ -24,8 +24,6 @@ process.on("unhandledRejection", (err) => client.logger.error(`Unhandled excepti
 
 (async () => {
   // check for updates
-  await checkForUpdates();
-
   // start the dashboard
   if (client.config.DASHBOARD.enabled) {
     client.logger.log("Launching dashboard");
