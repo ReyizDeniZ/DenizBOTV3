@@ -6,7 +6,7 @@ const { EMBED_COLORS } = require("@root/config");
  */
 module.exports = {
   name: "avatar",
-  description: "displays avatar information about the user",
+  description: "Kullanıcının profil fotoğrafını gösterir",
   type: ApplicationCommandType.User,
   enabled: true,
   ephemeral: true,
@@ -27,11 +27,11 @@ function getAvatar(user) {
   const x2048 = user.displayAvatarURL({ extension: "png", size: 2048 });
 
   const embed = new EmbedBuilder()
-    .setTitle(`Avatar of ${user.username}`)
+    .setTitle(`${user.username} Profil resmi`)
     .setColor(EMBED_COLORS.BOT_EMBED)
     .setImage(x256)
     .setDescription(
-      `Links: • [x64](${x64}) ` +
+      `Linkler: • [x64](${x64}) ` +
         `• [x128](${x128}) ` +
         `• [x256](${x256}) ` +
         `• [x512](${x512}) ` +
